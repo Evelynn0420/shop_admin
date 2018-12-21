@@ -3,10 +3,10 @@
     <el-form status-icon ref="form" :model="form" :rules="rules" label-width="80px">
       <img src="../assets/avatar.jpg" alt>
       <el-form-item label="用户名" prop="username">
-        <el-input v-model="form.username"></el-input>
+        <el-input v-model="form.username" @keyup.native.enter="login"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="form.password"></el-input>
+        <el-input v-model="form.password" @keyup.native.enter="login"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="warning" @click="login">登录</el-button>
@@ -62,12 +62,12 @@ export default {
           }).then(res => {
             if (res.data.meta.status === 200) {
               // alert('登录成功')
-              this.$message.success('登录成功')
               // 把后台颁发的token存起来
               localStorage.setItem('token', res.data.data.token)
               // 跳转到home组件
               // 参数跳转的路径
               this.$router.push('/home')
+              this.$message.success('登录成功')
             } else {
               this.$message({
                 message: res.data.meta.msg,
