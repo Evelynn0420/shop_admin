@@ -18,7 +18,7 @@
 
 <script>
 // 导入axios
-import axios from 'axios'
+// import axios from 'axios'
 export default {
   data() {
     return {
@@ -52,33 +52,32 @@ export default {
     },
     // 登录方法
     login() {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          // 发送ajax请求 进行登录
-          axios({
-            method: 'post',
-            url: 'http://localhost:8888/api/private/v1/login',
-            data: this.form
-          }).then(res => {
-            if (res.data.meta.status === 200) {
-              // alert('登录成功')
-              // 把后台颁发的token存起来
-              localStorage.setItem('token', res.data.data.token)
-              // 跳转到home组件
-              // 参数跳转的路径
-              this.$router.push('/home')
-              this.$message.success('登录成功')
-            } else {
-              this.$message({
-                message: res.data.meta.msg,
-                type: 'error',
-                duration: 1000
-              })
-            }
-          })
+      this.$refs.form.validate(async valid => {
+        if (!valid) return false
+        // 发送ajax请求 进行登录
+        let res = await this.axios({
+          method: 'post',
+          url: 'login',
+          data: this.form
+        })
+        let {
+          meta: { status },
+          data: { token }
+        } = res
+        if (status === 200) {
+          // alert('登录成功')
+          // 把后台颁发的token存起来
+          localStorage.setItem('token', token)
+          // 跳转到home组件
+          // 参数跳转的路径
+          this.$router.push('/home')
+          this.$message.success('登录成功')
         } else {
-          // 校验失败
-          return false
+          this.$message({
+            message: res.meta.msg,
+            type: 'error',
+            duration: 1000
+          })
         }
       })
     }
@@ -99,9 +98,6 @@ export default {
     width: 400px;
     margin: 200px auto;
     position: relative;
-    .el-form-item__label {
-      text-align: center;
-    }
     .el-form-item.is-required:not(.is-no-asterisk)
       > .el-form-item__label:before {
       content: '';

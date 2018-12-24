@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Login from 'components/Login'
 // 导入home
 import Home from 'components/Home'
+// 导入users组件
+import Users from 'components/users'
 
 Vue.use(Router)
 
@@ -18,7 +20,14 @@ const router = new Router({
     },
     {
       path: '/home',
-      component: Home
+      component: Home,
+      // 用于配置home的子路由
+      children: [
+        {
+          path: '/users',
+          component: Users
+        }
+      ]
     }
   ]
 })

@@ -19,6 +19,7 @@
           text-color="#fff"
           active-text-color="#ffd04b"
           unique-opened
+          router
         >
           <el-submenu index="1">
             <template slot="title">
@@ -26,7 +27,7 @@
               <span>用户管理</span>
             </template>
             <!-- 菜单项 -->
-            <el-menu-item index="1-1">
+            <el-menu-item index="/users">
               <i class="el-icon-menu"></i>
               <span slot="title">用户列表</span>
             </el-menu-item>
@@ -48,7 +49,10 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <!-- 显示home子路由的出口 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -62,22 +66,22 @@
 export default {
   methods: {
     // 退出
-    logout() {
-      this.$confirm('你确定要退出系统吗？', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$message.success('退出成功')
-          // 删除token
-          localStorage.removeItem('token')
-          // 跳转到登录组件
-          this.$router.push('login')
+    async logout() {
+      try {
+        await this.$confirm('你确定要退出系统吗？', '温馨提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         })
-        .catch(() => {
-          this.$message.info('取消退出')
-        })
+
+        this.$message.success('退出成功')
+        // 删除token
+        localStorage.removeItem('token')
+        // 跳转到登录组件
+        this.$router.push('login')
+      } catch (e) {
+        this.$message.info('取消退出')
+      }
     }
   }
 }
